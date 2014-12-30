@@ -10,6 +10,7 @@ Functions for prompting the user for project info.
 
 from __future__ import unicode_literals
 from collections import namedtuple
+import os
 import sys
 
 from .compat import iteritems, read_response
@@ -59,6 +60,7 @@ def prompt_for_config(context, no_input=False):
     env = Environment()
 
     for key, raw in iteritems(context['cookiecutter']):
+        raw = os.environ.get('COOKIECUTTER_{0}'.format(key.upper()), raw)
         context_entry = get_context_entry(key, raw)
         value = (env.from_string(context_entry.default)
                     .render(cookiecutter=cookiecutter_dict))

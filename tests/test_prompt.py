@@ -7,7 +7,7 @@ test_prompt
 
 Tests for `cookiecutter.prompt` module.
 """
-
+import os
 import platform
 import sys
 
@@ -94,6 +94,14 @@ class TestPrompt(unittest.TestCase):
             'include_extras': False,
             'include_tests': True,
         })
+
+    def test_prompt_with_environment_defailt(self):
+        context = {'cookiecutter': {'repo_name': 'something'}}
+        with patch.dict(os.environ):
+            os.environ['COOKIECUTTER_REPO_NAME'] = expected = 'better'
+            context = prompt.prompt_for_config(context, no_input=True)
+
+        self.assertEqual(context, {'repo_name': expected})
 
 
 class TestQueryAnswers(unittest.TestCase):
