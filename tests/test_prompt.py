@@ -103,6 +103,24 @@ class TestPrompt(unittest.TestCase):
 
         self.assertEqual(context, {'repo_name': expected})
 
+    @patch('cookiecutter.prompt.read_response', lambda x=u'': u'\n')
+    def test_prompt_with_environment_defailt_and_context_entry(self):
+        context = {'cookiecutter': OrderedDict([
+            (
+                'include_extras', {
+                    'default': u'no',
+                    'prompt':  u'Include extra things?',
+                    'type': 'boolean',
+                },
+            ),
+        ])}
+        with patch.dict(os.environ):
+            os.environ['COOKIECUTTER_INCLUDE_EXTRAS'] = 'yes'
+            context = prompt.prompt_for_config(context)
+        self.assertEqual(context, {
+            'include_extras': True,
+        })
+
 
 class TestQueryAnswers(unittest.TestCase):
 

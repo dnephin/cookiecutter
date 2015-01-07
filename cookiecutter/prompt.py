@@ -28,14 +28,16 @@ def get_context_entry(key, value):
     :param value: either a string, or a dict represeting a context entry
     :returns: a :class:`ContextEntry`
     """
+    default = os.environ.get('COOKIECUTTER_{0}'.format(key.upper()))
+
     if isinstance(value, dict):
         return ContextEntry(
             key,
-            value.get('default', ''),
+            default or value.get('default', ''),
             value.get('prompt', key),
             value.get('type'))
 
-    return ContextEntry(key, value, key, None)
+    return ContextEntry(key, default or value, key, None)
 
 
 def get_value(entry, value, default):
@@ -60,7 +62,6 @@ def prompt_for_config(context, no_input=False):
     env = Environment()
 
     for key, raw in iteritems(context['cookiecutter']):
-        raw = os.environ.get('COOKIECUTTER_{0}'.format(key.upper()), raw)
         context_entry = get_context_entry(key, raw)
         value = (env.from_string(context_entry.default)
                     .render(cookiecutter=cookiecutter_dict))
