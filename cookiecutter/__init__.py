@@ -12,7 +12,7 @@ import warnings
 from .compat import OLD_PY2
 
 
-__version__ = '0.9.0.yelp3'
+__version__ = '0.9.0.yelp4'
 
 if OLD_PY2:
     warnings.warn(
